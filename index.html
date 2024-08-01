@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bookmarks</title>
+  <style>
+    .bms-wrapper {
+  padding: 5px 7px;
+  border-radius: 10px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.bookmark {
+  padding: 20px;
+}
+
+.bookmarks-container {
+  position: relative;
+}
+
+.backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.bm-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+}
+
+.bm-item a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+  flex-grow: 1;
+}
+
+.bm-item .image {
+  margin-right: 10px;
+}
+
+.bm-item .bm-title {
+  font-size: 1rem;
+  color: #151515;
+}
+
+.bm-item .btn-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgb(95, 95, 95);
+  font-size: 1.2rem;
+  display: flex;
+  font: bold;
+  align-items: center;
+}
+
+.bookmark-form {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  display: none;
+}
+
+.card {
+  background: white;
+  padding: 20px 50px;
+  border-radius: 8px;
+}
+
+.form-control {
+  margin-bottom: 10px;
+}
+
+.form-control label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-control input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.btn-add {
+  width: 48%;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  background: transparent;
+}
+
+.btn-cancel {
+  width: 50%;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-update{
+  width: 45%;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.bookmark-list header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(90deg, #e74040, #f48b44);
+  padding: 10px;
+  border-radius: 5px;
+  color: white;
+}
+
+header button,
+header h3,
+header .search-container {
+  margin: 2px 0;
+}
+
+.bookmark-list .btn-control.btn-add {
+  cursor: pointer;
+  opacity: 0.9;
+}
+
+.cancel {
+  background: linear-gradient(90deg, #e61616, #f04c33);
+  color: #ffffff;
+}
+
+.update{
+  background: linear-gradient(90deg, #e61616, #f04c33);
+  color: #ffffff;
+}
+
+.add {
+  background: linear-gradient(90deg, #e61616, #f04c33);
+  color: #ffffff;
+}
+
+.bms-container {
+  margin-top: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column-reverse;
+}
+
+.bms-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 10px;
+  overflow-y: auto;
+}
+
+@media (max-width: 1200px) {
+  .bms-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 992px) {
+  .bms-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.bms-new {
+  display: block;
+  padding: 9px 10px;
+  background: white;
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  display: flex;
+}
+
+.bms-new:hover {
+  background-color: #ffffff;
+  transform: scale(1.05);
+}
+
+.img-logo {
+  height: 25vh;
+}
+
+.img-logo1 {
+  height: 60px;
+  display: block;
+  margin: 0 auto;
+}
+
+.img-search{
+  width: 30px;
+  height: 30px;
+}
+h2 {
+  text-align: center;
+  color: #575454;
+}
+
+.bms-tabs {
+  justify-content: center;
+  text-align: center;
+  margin: 9px;
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.bms-tab {
+  padding: 12px 20px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border: none;
+}
+
+.bms-tab:hover {
+  background-color: #e0e0e0;
+}
+
+.bms-tab.active {
+  background-color: #e74040; 
+  color: white;
+}
+
+.new-tab-form {
+  display: flex;
+  margin-top: 10px;
+}
+
+.new-tab-form input {
+  flex: 1;
+  padding: 5px;
+  margin-right: 10px;
+}
+
+.new-tab-form button {
+  padding: 5px 10px;
+}
+
+.search-container {
+  position: relative;
+  background: #ffffff;
+  border-radius: 50px;
+  padding: 1px 4px;
+  display: flex;
+  align-items: center;
+}
+
+#searchInput {
+  outline: none;
+  border: none;
+  background: none;
+  width: 100%;
+  padding: 1px 20px;
+  color: #333;
+  float: left;
+  font-size: 14px;
+  transition: width 0.3s ease;
+}
+
+#searchInput::placeholder {
+  color: #888;
+}
+
+#searchButton {
+  color: #fff;
+  border-radius: 50%;
+  border: none;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+#searchButton:hover {
+  background: #ffffff;
+  transform: scale(1.1);
+}
+
+h3 {
+  text-align: center;
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.btn-group {
+  display: flex;
+}
+
+.btn-share{
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.btn-share:hover{
+  color: #e74040;
+}
+
+.btn-edit{
+  background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+}
+
+.btn-edit:hover{
+  color: #e74040;
+}
+
+.edit-emoji{
+  height: 20px;
+      display: block;
+      margin: 0 2px;
+}
+
+.share-emoji{
+  height: 20px;
+  display: block;
+  margin: 0 auto;
+}
+
+.add-emoji{
+  height: 20px;
+  display: block;
+  margin: 0 2px;
+}
+
+.delete-emoji{
+  height: 20px;
+  display: block;
+  margin: 0 2px;
+}
+footer {
+  background-color: #f1f1f1;
+  text-align: center;
+  padding: 10px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  font-size: 1em;
+}
+
+.copy-feedback {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #333;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      display: none;
+      z-index: 1001;
+    }
+
+    .edit-img{
+      height: 25vh;
+    }
+  </style>
+</head>
+<body>
+  <div class="bookmark">
+    <section class="bookmark-list">
+      <img src="logo.jpg" class="img-logo1">
+      <header>
+        <div class="search-container">
+          <input type="text" id="searchInput" placeholder="Search bookmarks...">
+          <button id="searchButton"><i class="fas fa-search"><img src="mg2.png" class="img-search"></i></button>
+        </div>
+        <h3>"Bookmarking moments of inspiration."</h3>
+        <button class="bms-new" id="openFormButton">Add New <img src="add.png" class="add-emoji"></button>
+      </header>
+      <div class="bms-tabs-container bms-tabs" id="tabsContainer"></div>
+      <div id="bookmarkContainer" class="bms-container bms-wrapper"></div>
+      <footer>
+        Made with ❤️ by shruti-875
+      </footer>
+    </section>
+  </div>
+
+  <div class="backdrop" id="backdrop" style="display: none;"></div>
+  <div class="copy-feedback" id="copyFeedback">Link copied to clipboard!</div>
+
+  <section class="bookmark-form" id="bookmarkFormSection" style="display: none;">
+    <div class="card">
+      <img src="Bookmark.png" class="img-logo">
+      <h2>Add Bookmarks</h2>
+      <form id="bookmarkForm">
+        <div class="form-control">
+          <input id="bmTitle" type="text" placeholder="Title" required>
+        </div>
+        <div class="form-control">
+          <input id="bmLink" type="text" placeholder="Url" required>
+        </div>
+        <div class="form-buttons">
+          <button type="button" class="btn-cancel cancel" id="closeFormButton">Close</button>
+          <button type="submit" class="btn-add add">Add</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="bookmark-form" id="editBookmarkFormSection" style="display: none;">
+    <div class="card">
+      <img src="Bookmark.png" class="edit-img">
+      <h2>Edit Bookmark</h2>
+      <form id="editBookmarkForm">
+        <div class="form-control">
+          <input id="editBmTitle" type="text" placeholder="Title" required>
+        </div>
+        <div class="form-control">
+          <input id="editBmLink" type="text" placeholder="Url" required>
+        </div>
+        <div class="form-buttons">
+          <button type="button" class="btn-cancel cancel" id="cancelEditButton">Cancel</button>
+          <button type="submit" class="btn-update update">Update</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const bookmarkContainer = document.getElementById('bookmarkContainer');
+      const bmTitleInput = document.getElementById('bmTitle');
+      const bmLinkInput = document.getElementById('bmLink');
+      const editBmTitleInput = document.getElementById('editBmTitle');
+      const editBmLinkInput = document.getElementById('editBmLink');
+      const backdrop = document.getElementById('backdrop');
+      const tabsContainer = document.getElementById('tabsContainer');
+      const searchInput = document.getElementById('searchInput');
+      const searchButton = document.getElementById('searchButton');
+      const copyFeedback = document.getElementById('copyFeedback');
+      let currentCategory = 'Personal';
+      let currentEditId = null;
+
+      const loadBookmarks = (searchTerm = '') => {
+        const bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+        bookmarkContainer.innerHTML = '';
+        bookmarks
+          .filter(bookmark => bookmark.category === currentCategory && bookmark.bmTitle.toLowerCase().includes(searchTerm.toLowerCase()))
+          .forEach(bookmark => {
+            addBookmarkToDOM(bookmark);
+          });
+      };
+
+      const saveBookmarks = (bookmarks) => {
+        localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+      };
+
+      const getBookmarks = () => {
+        return JSON.parse(localStorage.getItem('bookmarks')) || [];
+      };
+
+      const addBookmarkToDOM = (bookmark) => {
+        const li = document.createElement('li');
+        li.className = 'bm-item';
+
+        // Format date
+        const formattedDate = new Date(bookmark.timestamp).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        });
+
+        li.innerHTML = `
+          <a href="${bookmark.bmLink}" target="_blank" rel="noopener noreferrer">
+            <img src="https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${bookmark.bmLink}&size=24" alt="" class="image">
+            <span class="bm-title">${bookmark.bmTitle}</span>
+          </a>
+          <div class="btn-group">
+            <span class="timestamp">${formattedDate}</span>
+            <button class="btn-share" data-link="${bookmark.bmLink}" data-title="${bookmark.bmTitle}"><img src="share.png" class="share-emoji"></button>
+            <button class="btn-edit" data-id="${bookmark.id}" data-title="${bookmark.bmTitle}" data-link="${bookmark.bmLink}"><img src="pencil.png" class="edit-emoji"></button>
+            <button class="btn-delete" data-id="${bookmark.id}"><img src="delete.png" class="delete-emoji"></button>
+          </div>
+        `;
+
+        bookmarkContainer.appendChild(li);
+
+        const deleteButton = li.querySelector('.btn-delete');
+        deleteButton.addEventListener('click', () => deleteBookmark(bookmark.id));
+
+        const shareButton = li.querySelector('.btn-share');
+        shareButton.addEventListener('click', () => shareBookmark(bookmark.bmLink, bookmark.bmTitle));
+
+        const editButton = li.querySelector('.btn-edit');
+        editButton.addEventListener('click', () => {
+          editBmTitleInput.value = bookmark.bmTitle;
+          editBmLinkInput.value = bookmark.bmLink;
+          currentEditId = bookmark.id;
+          showEditForm();
+        });
+      };
+
+      const shareBookmark = (link, title) => {
+        navigator.clipboard.writeText(link).then(() => {
+          copyFeedback.style.display = 'block';
+          setTimeout(() => {
+            copyFeedback.style.display = 'none';
+          }, 2000);
+        }).catch(console.error);
+      };
+
+      const addBookmark = (bookmark) => {
+        bookmark.timestamp = new Date().toISOString(); // Add timestamp
+
+        const bookmarks = getBookmarks();
+        bookmarks.push(bookmark);
+        saveBookmarks(bookmarks);
+
+        if (bookmark.category === currentCategory) {
+          addBookmarkToDOM(bookmark);
+        }
+      };
+
+      const deleteBookmark = (id) => {
+        let bookmarks = getBookmarks();
+        bookmarks = bookmarks.filter(bookmark => bookmark.id !== id);
+        saveBookmarks(bookmarks);
+        loadBookmarks();
+      };
+
+      const openForm = () => {
+        document.getElementById('bookmarkFormSection').style.display = 'block';
+        backdrop.style.display = 'block';
+      };
+
+      const closeForm = () => {
+        document.getElementById('bookmarkFormSection').style.display = 'none';
+        backdrop.style.display = 'none';
+      };
+
+      const showEditForm = () => {
+        document.getElementById('editBookmarkFormSection').style.display = 'block';
+        backdrop.style.display = 'block';
+      };
+
+      const closeEditForm = () => {
+        document.getElementById('editBookmarkFormSection').style.display = 'none';
+        backdrop.style.display = 'none';
+      };
+
+      const setupTabs = () => {
+        const categories = ['Personal', 'Work', 'Research'];
+        categories.forEach(category => {
+          const tab = document.createElement('button');
+          tab.className = 'bms-tab';
+          tab.textContent = category;
+          tab.addEventListener('click', () => {
+            currentCategory = category;
+            document.querySelectorAll('.bms-tab').forEach(tab => tab.classList.remove('active'));
+            tab.classList.add('active');
+            loadBookmarks(searchInput.value);
+          });
+          tabsContainer.appendChild(tab);
+        });
+        tabsContainer.firstChild.classList.add('active');
+      };
+
+      searchButton.addEventListener('click', () => {
+        loadBookmarks(searchInput.value);
+      });
+
+      const openFormButton = document.getElementById('openFormButton');
+      openFormButton.addEventListener('click', openForm);
+
+      const cancelEditButton = document.getElementById('cancelEditButton');
+      cancelEditButton.addEventListener('click', closeEditForm);
+
+      document.getElementById('bookmarkForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const bookmark = {
+          id: Date.now(),
+          bmTitle: bmTitleInput.value,
+          bmLink: bmLinkInput.value,
+          category: currentCategory
+        };
+        addBookmark(bookmark);
+        closeForm();
+      });
+
+      document.getElementById('editBookmarkForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const bookmarks = getBookmarks();
+        const bookmark = bookmarks.find(bm => bm.id === currentEditId);
+        if (bookmark) {
+          bookmark.bmTitle = editBmTitleInput.value;
+          bookmark.bmLink = editBmLinkInput.value;
+          saveBookmarks(bookmarks);
+          loadBookmarks();
+          closeEditForm();
+        }
+      });
+
+      document.getElementById('closeFormButton').addEventListener('click', closeForm);
+      setupTabs();
+      loadBookmarks();
+    });
+  </script>
+</body>
+</html>
