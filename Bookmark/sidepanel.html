@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bookmarks</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="bookmark">
+    <section class="bookmark-list">
+      <img src="logo.jpg" class="img-logo1">
+      <header>
+        <div class="search-container">
+          <input type="text" id="searchInput" placeholder="Search bookmarks...">
+          <button id="searchButton"><i class="fas fa-search"><img src="mg2.png" class="img-search"></i></button>
+        </div>
+        <h3>"Bookmarking moments of inspiration."</h3>
+        <button class="bms-new" id="openFormButton">Add New <img src="add.png" class="add-emoji"></button>
+      </header>
+      <div class="bms-tabs-container bms-tabs" id="tabsContainer"></div>
+      <div id="bookmarkContainer" class="bms-container bms-wrapper"></div>
+    </section>
+  </div>
+
+  <div class="backdrop" id="backdrop" style="display: none;"></div>
+
+  <section class="bookmark-form" id="bookmarkFormSection" style="display: none;">
+    <div class="card">
+      <img src="Bookmark.png" class="img-logo">
+      <h2>Add Bookmarks</h2>
+      <form id="bookmarkForm">
+        <div class="form-control">
+          <input id="bmTitle" type="text" placeholder="Title" required>
+        </div>
+        <div class="form-control">
+          <input id="bmLink" type="text" placeholder="Url" required>
+        </div>
+        <div class="form-buttons">
+          <button type="button" class="btn-cancel cancel" id="closeFormButton">Close</button>
+          <button type="submit" class="btn-add add">Add</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <script src="./sidepanel.js"></script>
+</body>
+</html>
